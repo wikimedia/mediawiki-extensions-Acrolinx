@@ -1,22 +1,26 @@
 {
-  "name": "acrolinx",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yaronkoren/Acrolinx.git"
-  },
-  "author": "Yaron Koren",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/yaronkoren/Acrolinx/issues"
-  },
-  "homepage": "https://github.com/yaronkoren/Acrolinx#readme",
-  "devDependencies": {
-    "eslint": "^5.15.3"
-  }
+	"name": "acrolinx",
+	"version": "0.0.1",
+	"description": "",
+	"private": "true",
+	"scripts": {
+		"test": "grunt test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yaronkoren/Acrolinx.git"
+	},
+	"author": "Yaron Koren",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/yaronkoren/Acrolinx/issues"
+	},
+	"homepage": "https://github.com/yaronkoren/Acrolinx#readme",
+	"devDependencies": {
+		"eslint-config-wikimedia": "0.18.1",
+		"grunt": "1.3.0",
+		"grunt-eslint": "23.0.0",
+		"grunt-stylelint": "0.16.0",
+		"stylelint-config-wikimedia": "0.10.3"
+	}
 }

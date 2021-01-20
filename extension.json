@@ -18,7 +18,7 @@
 		]
 	},
 	"AutoloadClasses": {
-		"AcrolinxHooks": "Acrolinx.hooks.php"
+		"AcrolinxHooks": "AcrolinxHooks.php"
 	},
 	"ResourceModules": {
 		"ext.acrolinx": {
@@ -44,11 +44,11 @@
 		"MakeGlobalVariablesScript": "AcrolinxHooks::setGlobalJSVariables",
 		"EditPage::showEditForm:initial": "AcrolinxHooks::addToEditPage",
 		"PageForms::AddRLModules": "AcrolinxHooks::addToFormEditPage",
-		"BeforePageDisplay": "AcrolinxHooks::BeforePageDisplay",
+		"BeforePageDisplay": "AcrolinxHooks::onBeforePageDisplay",
 		"UnitTestsList": "AcrolinxHooks::onUnitTestsList"
 	},
 	"config": {
-		"AcrolinxNamespaces": [0],
+		"AcrolinxNamespaces": [ 0 ],
 		"AcrolinxPageLocationID": null
 	},
 	"manifest_version": 1

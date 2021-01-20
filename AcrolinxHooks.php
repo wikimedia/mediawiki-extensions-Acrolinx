@@ -78,7 +78,7 @@ class AcrolinxHooks {
 	 *
 	 * @return bool|void
 	 */
-	public static function BeforePageDisplay( OutputPage $out, Skin $skin ) {
+	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
 		// TODO: perhaps find a way to detect VE/Forms more precisely to
 		// avoid loading the library code on regular pages
 
@@ -89,6 +89,7 @@ class AcrolinxHooks {
 		$isVe = $out->getRequest()->getVal('veaction') === 'edit';*/
 		$isEnabled = self::enableAcrolinxForPage( $out->getTitle() );
 
+		// phpcs:ignore MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment
 		if ( !$isEnabled /*|| !( $isEditOrForm || $isVe )*/ ) {
 			return;
 		}

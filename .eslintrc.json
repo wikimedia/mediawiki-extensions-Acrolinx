@@ -13,13 +13,16 @@
 		"mediaWiki": true
 	},
 	"rules": {
-		"max-len": "off",
-		"no-jquery/no-global-selector": "off",
-		"no-implicit-globals": "off",
-		"vars-on-top": "off",
-		"one-var": "off",
-		"no-jquery/no-event-shorthand": "off",
+		"eqeqeq": "off",
+		"jsdoc/check-types": "off",
+		"jsdoc/no-undefined-types": "off",
 		"no-jquery/no-animate": "off",
-		"linebreak-style": "off"
+		"no-jquery/no-class-state": "off",
+		"no-jquery/no-global-selector": "off",
+		"no-jquery/no-sizzle": "off",
+		"no-shadow": "off",
+		"no-unused-vars": "off",
+		"one-var": "off",
+		"vars-on-top": "off"
 	}
 }

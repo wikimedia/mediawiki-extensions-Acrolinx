@@ -3,7 +3,7 @@
  * including the standard edit page, TinyMCE editing pages, and Page
  * Forms form-based editing pages.
  *
- * @authors Yaron Koren
+ * @author Yaron Koren
  */
 
 'use strict';
@@ -44,6 +44,7 @@
 
 	/**
 	 * Starts Acrolinx plugin
+	 *
 	 * @param {Array} initializers
 	 */
 	MediawikiAcrolinx.prototype.startAcrolinx = function ( initializers ) {
@@ -56,7 +57,7 @@
 			// Setup toggles
 			this.setupToggle();
 			// Bind to window resize to match the sidebar width
-			$( window ).resize( this.onResize.bind( this ) );
+			$( window ).on( 'resize', this.onResize.bind( this ) );
 			// Call the resize callback right away
 			this.onResize();
 		}.bind( this ) );
@@ -64,6 +65,7 @@
 
 	/**
 	 * Builds up array of initializers to be executed
+	 *
 	 * @return {Array}
 	 */
 	MediawikiAcrolinx.prototype.getInitializers = function () {
@@ -110,6 +112,7 @@
 
 	/**
 	 * Rough bypass for deferred calls
+	 *
 	 * @param {Function} method
 	 */
 	MediawikiAcrolinx.prototype.mockDeferCall = function ( method ) {
@@ -199,9 +202,9 @@
 	 */
 	MediawikiAcrolinx.prototype.setupVEForAll = function () {
 		var self = this;
-		mw.hook( 'veForAll.targetCreated' ).add( function( instance ) {
+		mw.hook( 'veForAll.targetCreated' ).add( function ( instance ) {
 			self.setupVEForAllField( instance );
-		});
+		} );
 	};
 
 	MediawikiAcrolinx.prototype.setupVEForAllField = function ( instance ) {
@@ -227,9 +230,10 @@
 			// VE surface being recreated on editor switch so we need to rebind
 			instance.target.getSurface().on( 'switchEditor', function () {
 				// TODO: ideally we need to remove the adapter upon VE surface destroy
-				//  and replace it with regular input adapter, though, the removeAdapter method
-				//  is not implemented in the Acrolinx SDK so perhaps this is a very
-				//  special case need to be implemented in the new VisualEditorAdapter class in Acrolinx SDK
+				// and replace it with regular input adapter, though, the removeAdapter method
+				// is not implemented in the Acrolinx SDK so perhaps this is a very
+				// special case need to be implemented in the new VisualEditorAdapter
+				// class in Acrolinx SDK
 				if ( $( instance.target.$node ).is( ':visible' ) ) {
 					// Switch to VE
 					// TODO: ...
@@ -244,6 +248,7 @@
 
 	/**
 	 * Creates per-field content adapters
+	 *
 	 * @param {Element} fieldElement
 	 */
 	MediawikiAcrolinx.prototype.setupFormField = function ( fieldElement ) {
@@ -264,6 +269,7 @@
 
 	/**
 	 * Setup necessary bindings for Visual Editor mode
+	 *
 	 * @return {$.Deferred}
 	 */
 	MediawikiAcrolinx.prototype.setupForVE = function () {
@@ -305,25 +311,25 @@
 		return defer;
 	};
 
-        /**
+	/**
 	 * This function is needed so that the adapters will be stored (and
 	 * then called) in the order that their inputs appear in the form,
 	 * instead of just having "regular" inputs first and VisualEditor inputs
 	 * later.
 	 */
-	MediawikiAcrolinx.prototype.sortAdapters = function() {
+	MediawikiAcrolinx.prototype.sortAdapters = function () {
 		var self = this;
-		self.multiAdapter.adapters.sort( function( a, b ) {
-			var inputNumA = self.getAdapterInputNum( a.adapter );
-			var inputNumB = self.getAdapterInputNum( b.adapter );
+		self.multiAdapter.adapters.sort( function ( a, b ) {
+			var inputNumA = self.getAdapterInputNum( a.adapter ),
+				inputNumB = self.getAdapterInputNum( b.adapter );
 			return ( inputNumA - inputNumB );
-		});
+		} );
 	};
 
-	MediawikiAcrolinx.prototype.getAdapterInputNum = function( adapter ) {
+	MediawikiAcrolinx.prototype.getAdapterInputNum = function ( adapter ) {
 		var inputID;
 		if ( adapter instanceof acrolinx.plugins.adapter.VisualEditorAdapter ) {
-			inputID = adapter.ve.$node[0].id;
+			inputID = adapter.ve.$node[ 0 ].id;
 		} else {
 			inputID = adapter.element.id;
 		}
@@ -334,20 +340,21 @@
 	 * Handles window resize
 	 */
 	MediawikiAcrolinx.prototype.onResize = function () {
-		var newContentAreaWidth = this.getContentAreaWidthWithAcrolinx();
-		var pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
+		var newContentAreaWidth = this.getContentAreaWidthWithAcrolinx(),
+			pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
 		$( pageLocationID ).width( newContentAreaWidth );
 	};
 
 	/**
 	 * Calculates width
+	 *
 	 * @param {int} acrolinxWidth
 	 * @return {number}
 	 */
 	MediawikiAcrolinx.prototype.getContentAreaWidthWithAcrolinx = function ( acrolinxWidth ) {
-		var browserWidth = $( window ).width();
-		var pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
-		var mainTextLeft = $( pageLocationID ).offset().left;
+		var browserWidth = $( window ).width(),
+			pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' ),
+			mainTextLeft = $( pageLocationID ).offset().left;
 		acrolinxWidth = acrolinxWidth || $( '#acrolinxContainer iframe' ).width();
 		return browserWidth - mainTextLeft - acrolinxWidth - 50;
 	};
@@ -357,11 +364,12 @@
 	 */
 	MediawikiAcrolinx.prototype.setupToggle = function () {
 		$( '#acrolinxContainer' ).prepend( '<div id="acrolinxToggle">&gt;</div>' );
-		$( 'div#acrolinxToggle' ).click( this.onToggle.bind( this ) );
+		$( 'div#acrolinxToggle' ).on( 'click', this.onToggle.bind( this ) );
 	};
 
 	/**
 	 * Handles toggle button click
+	 *
 	 * @param {Event} event
 	 */
 	MediawikiAcrolinx.prototype.onToggle = function ( event ) {
@@ -388,6 +396,7 @@
 
 	/**
 	 * Detect page type (textarea/tinymce/form/ve)
+	 *
 	 * @return {string|null}
 	 */
 	MediawikiAcrolinx.prototype.getEditMode = function () {
@@ -436,6 +445,7 @@
 
 	/**
 	 * Generates config for Acrolinx plugin
+	 *
 	 * @return {Object}
 	 */
 	MediawikiAcrolinx.prototype.getConfig = function () {
