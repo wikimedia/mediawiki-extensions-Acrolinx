@@ -13,7 +13,6 @@
 		"mediaWiki": true
 	},
 	"rules": {
-		"quote-props": [ "error", "as-needed" ],
 		"max-len": "off",
 		"no-jquery/no-global-selector": "off",
 		"no-implicit-globals": "off",
