@@ -1,9 +1,9 @@
 {
-	"@Note": "When updating this file please also update Acrolinx.php with the same changes.",
 	"name": "Acrolinx",
-	"version": "0.1",
+	"version": "0.2",
 	"author": [
-		"Yaron Koren"
+		"Yaron Koren",
+		"Vedmaka"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:Acrolinx",
 	"descriptionmsg": "acrolinx-desc",
