@@ -20,7 +20,6 @@
 		"no-jquery/no-sizzle": "off",
 		"no-shadow": "off",
 		"no-unused-vars": "off",
-		"one-var": "off",
 		"vars-on-top": "off"
 	}
 }
