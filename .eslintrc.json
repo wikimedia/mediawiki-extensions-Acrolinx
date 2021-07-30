@@ -19,7 +19,6 @@
 		"no-jquery/no-global-selector": "off",
 		"no-jquery/no-sizzle": "off",
 		"no-shadow": "off",
-		"no-unused-vars": "off",
-		"vars-on-top": "off"
+		"no-unused-vars": "off"
 	}
 }
