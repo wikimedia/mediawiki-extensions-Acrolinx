@@ -5,7 +5,7 @@
  *
  * @group Database
  */
-class AcrolinxHooksTest extends MediaWikiTestCase {
+class AcrolinxHooksTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers AcrolinxHooks::enableAcrolinxForPage
