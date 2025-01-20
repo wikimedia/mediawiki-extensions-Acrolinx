@@ -12,7 +12,13 @@ use MediaWiki\EditPage\EditPage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Title\Title;
 
-class AcrolinxHooks {
+// phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+
+class AcrolinxHooks implements
+	\MediaWiki\Hook\BeforePageDisplayHook,
+	\MediaWiki\Hook\EditPage__showEditForm_initialHook,
+	\MediaWiki\Hook\MakeGlobalVariablesScriptHook
+{
 
 	/**
 	 * @param Title $title
@@ -29,9 +35,9 @@ class AcrolinxHooks {
 	 * @param string[] &$vars
 	 * @param OutputPage $out
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	public static function setGlobalJSVariables( &$vars, $out ) {
+	public function onMakeGlobalVariablesScript( &$vars, $out ): void {
 		global $wgAcrolinxServerAddress, $wgAcrolinxClientSignature;
 		global $wgAcrolinxPageLocationID;
 		global $wgLanguageCode;
@@ -46,21 +52,19 @@ class AcrolinxHooks {
 		// MediaWiki language codes to Acrolinx ones...
 		$vars['wgAcrolinxPageLanguage'] = $wgLanguageCode;
 		$vars['wgAcrolinxUserLanguage'] = $mwUserLanguage;
-		return true;
 	}
 
 	/**
-	 * @param EditPage &$editPage
-	 * @param OutputPage &$output
+	 * @param EditPage $editPage
+	 * @param OutputPage $output
 	 *
-	 * @return bool
+	 * @return bool|void True or no return value to continue or false to abort
 	 */
-	public static function addToEditPage( EditPage &$editPage, OutputPage &$output ) {
+	public function onEditPage__showEditForm_initial( $editPage, $output ) {
 		$title = $editPage->getTitle();
 		if ( self::enableAcrolinxForPage( $title ) ) {
 			$output->addModules( 'ext.acrolinx' );
 		}
-		return true;
 	}
 
 	/**
@@ -79,10 +83,8 @@ class AcrolinxHooks {
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
-	 *
-	 * @return bool|void
 	 */
-	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
+	public function onBeforePageDisplay( $out, $skin ): void {
 		// TODO: perhaps find a way to detect VE/Forms more precisely to
 		// avoid loading the library code on regular pages
 
@@ -99,7 +101,6 @@ class AcrolinxHooks {
 		}
 
 		$out->addModules( 'ext.acrolinx' );
-		return true;
 	}
 
 }

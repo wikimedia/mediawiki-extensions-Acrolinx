@@ -40,11 +40,16 @@
 		"localBasePath": "",
 		"remoteExtPath": "Acrolinx"
 	},
+	"HookHandlers": {
+		"main": {
+			"class": "AcrolinxHooks"
+		}
+	},
 	"Hooks": {
-		"MakeGlobalVariablesScript": "AcrolinxHooks::setGlobalJSVariables",
-		"EditPage::showEditForm:initial": "AcrolinxHooks::addToEditPage",
+		"MakeGlobalVariablesScript": "main",
+		"EditPage::showEditForm:initial": "main",
 		"PageForms::AddRLModules": "AcrolinxHooks::addToFormEditPage",
-		"BeforePageDisplay": "AcrolinxHooks::onBeforePageDisplay"
+		"BeforePageDisplay": "main"
 	},
 	"config": {
 		"AcrolinxServerAddress": null,
