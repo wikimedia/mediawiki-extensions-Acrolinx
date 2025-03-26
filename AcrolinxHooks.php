@@ -8,6 +8,10 @@
  * @ingroup Acrolinx
  */
 
+use MediaWiki\EditPage\EditPage;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\Title\Title;
+
 class AcrolinxHooks {
 
 	/**
