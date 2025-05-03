@@ -13,7 +13,7 @@
 	/**
 	 * @constructor
 	 */
-	var MediawikiAcrolinx = function () {
+	const MediawikiAcrolinx = function () {
 		this.setup();
 	};
 
@@ -22,7 +22,7 @@
 	 */
 	MediawikiAcrolinx.prototype.setup = function () {
 
-		var initializers;
+		let initializers;
 		this.editMode = this.getEditMode();
 
 		// Install the plugin
@@ -48,7 +48,7 @@
 	 * @param {Array} initializers
 	 */
 	MediawikiAcrolinx.prototype.startAcrolinx = function ( initializers ) {
-		$.when.apply( $, initializers ).done( function () {
+		$.when.apply( $, initializers ).done( () => {
 			this.addToPage();
 			// Register the adapters
 			this.acrolinxPlugin.registerAdapter( this.multiAdapter );
@@ -60,7 +60,7 @@
 			$( window ).on( 'resize', this.onResize.bind( this ) );
 			// Call the resize callback right away
 			this.onResize();
-		}.bind( this ) );
+		} );
 	};
 
 	/**
@@ -69,7 +69,7 @@
 	 * @return {Array}
 	 */
 	MediawikiAcrolinx.prototype.getInitializers = function () {
-		var initializers = [];
+		let initializers = [];
 		// Take edit mode specific actions
 		switch ( this.editMode ) {
 			case 'textarea':
@@ -100,14 +100,14 @@
 	 * Handles switch from source editing to VE editing mode and vise versa
 	 */
 	MediawikiAcrolinx.prototype.handleVESwitch = function () {
-		mw.hook( 've.activationComplete' ).add( function () {
+		mw.hook( 've.activationComplete' ).add( () => {
 			if ( this.editMode === 'textarea' ) {
-				this.acrolinxPlugin.dispose( function () {
+				this.acrolinxPlugin.dispose( () => {
 					this.editMode = 've';
 					this.startAcrolinx( this.getInitializers() );
-				}.bind( this ) );
+				} );
 			}
-		}.bind( this ) );
+		} );
 	};
 
 	/**
@@ -116,7 +116,7 @@
 	 * @param {Function} method
 	 */
 	MediawikiAcrolinx.prototype.mockDeferCall = function ( method ) {
-		var defer = $.Deferred();
+		const defer = $.Deferred();
 		method.bind( this )();
 		defer.resolve();
 	};
@@ -125,7 +125,7 @@
 	 * Adds the Acrolinx interface to the page.
 	 */
 	MediawikiAcrolinx.prototype.addToPage = function () {
-		var pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
+		let pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
 		if ( this.editMode === 've' ) {
 			if ( pageLocationID == null ) {
 				pageLocationID = 'content';
@@ -144,7 +144,7 @@
 	 * Do necessary setups for regular source editing mode
 	 */
 	MediawikiAcrolinx.prototype.setupForTextarea = function () {
-		var inputAdapter = new acrolinx.plugins.adapter.InputAdapter( {
+		const inputAdapter = new acrolinx.plugins.adapter.InputAdapter( {
 			editorId: 'wpTextbox1'
 		} );
 		this.multiAdapter.addSingleAdapter( inputAdapter );
@@ -154,7 +154,7 @@
 	 * Do necessary setups for TinyMCE editing mode
 	 */
 	MediawikiAcrolinx.prototype.setupForTinyMCE = function () {
-		var inputAdapter = new acrolinx.plugins.adapter.TinyMCEAdapter( {
+		const inputAdapter = new acrolinx.plugins.adapter.TinyMCEAdapter( {
 			editorId: 'wpTextbox1'
 		} );
 		this.multiAdapter.addSingleAdapter( inputAdapter );
@@ -164,33 +164,33 @@
 	 * Do necessary setups for form editing mode
 	 */
 	MediawikiAcrolinx.prototype.setupForForm = function () {
-		var $inputs = $( 'textarea, input.createboxInput' )
+		const $inputs = $( 'textarea, input.createboxInput' )
 			.not( '.multipleTemplateStarter textarea' ) // ignore embed starter textarea
 			.not( '.multipleTemplateStarter input.createboxInput' ) // ignore embed starter inputs
 			.not( 'input.pfTokens' ) // ignore token input
 			// TODO: ...
 			.not( 'textarea.visualeditor' ); // ignore VEForAll input
 
-		$inputs.each( function ( i, input ) {
+		$inputs.each( ( i, input ) => {
 			this.setupFormField( input );
-		}.bind( this ) );
+		} );
 
 		// Use a JavaScript hook to also add an adapter for any textarea in a
 		// newly-created instane of a multiple-instance template.
-		mw.hook( 'pf.addTemplateInstance' ).add( function ( $newDiv ) {
+		mw.hook( 'pf.addTemplateInstance' ).add( ( $newDiv ) => {
 
 			// TODO: refactor into a better approach with less duplication
-			var $inputs = $newDiv.find( 'textarea, input.createboxInput' )
+			const $inputs = $newDiv.find( 'textarea, input.createboxInput' )
 				.not( '.multipleTemplateStarter textarea' )
 				.not( '.multipleTemplateStarter input.createboxInput' )
 				.not( 'input.pfTokens' )
 				.not( 'textarea.visualeditor' );
 
-			$inputs.each( function ( i, input ) {
+			$inputs.each( ( i, input ) => {
 				this.setupFormField( input );
-			}.bind( this ) );
+			} );
 
-		}.bind( this ) );
+		} );
 
 		// Handle VEForAll instances inside the form, it won't do anything if there are no VEForAll
 		this.setupVEForAll();
@@ -201,20 +201,20 @@
 	 * Adds necessary bindings for VEForAll fields in form
 	 */
 	MediawikiAcrolinx.prototype.setupVEForAll = function () {
-		var self = this;
-		mw.hook( 'veForAll.targetCreated' ).add( function ( instance ) {
+		const self = this;
+		mw.hook( 'veForAll.targetCreated' ).add( ( instance ) => {
 			self.setupVEForAllField( instance );
 		} );
 	};
 
 	MediawikiAcrolinx.prototype.setupVEForAllField = function ( instance ) {
-		var self = this;
-		instance.target.on( 'editor-ready', function () {
+		const self = this;
+		instance.target.on( 'editor-ready', () => {
 
 			if ( typeof instance.acrolinxEnabled === 'undefined' ) {
 
 				// TODO: needs extra modification on SDK
-				var inputAdapter = new acrolinx.plugins.adapter.VisualEditorAdapter( {
+				const inputAdapter = new acrolinx.plugins.adapter.VisualEditorAdapter( {
 					ve: instance
 				} );
 				self.multiAdapter.addSingleAdapter( inputAdapter );
@@ -228,7 +228,7 @@
 			}
 
 			// VE surface being recreated on editor switch so we need to rebind
-			instance.target.getSurface().on( 'switchEditor', function () {
+			instance.target.getSurface().on( 'switchEditor', () => {
 				// TODO: ideally we need to remove the adapter upon VE surface destroy
 				// and replace it with regular input adapter, though, the removeAdapter method
 				// is not implemented in the Acrolinx SDK so perhaps this is a very
@@ -252,7 +252,7 @@
 	 * @param {Element} fieldElement
 	 */
 	MediawikiAcrolinx.prototype.setupFormField = function ( fieldElement ) {
-		var inputAdapter, textareaID = $( fieldElement ).attr( 'id' );
+		let inputAdapter, textareaID = $( fieldElement ).attr( 'id' );
 
 		if ( $( this ).hasClass( 'tinymce' ) ) {
 			inputAdapter = new acrolinx.plugins.adapter.TinyMCEAdapter( {
@@ -273,17 +273,17 @@
 	 * @return {$.Deferred}
 	 */
 	MediawikiAcrolinx.prototype.setupForVE = function () {
-		var defer = $.Deferred();
+		const defer = $.Deferred();
 		/**
 		 * Catches VE initialization event
 		 * The event being fired for both dynamic and static activation of VE surface
 		 */
-		mw.hook( 've.activationComplete' ).add( function () {
+		mw.hook( 've.activationComplete' ).add( () => {
 
 			// TODO: ...
 			$( '#content #acrolinxContainer' ).addClass( 've-enabled-acrolinx' );
 
-			var contentAdapter = new acrolinx.plugins.adapter.VisualEditorAdapter( {
+			const contentAdapter = new acrolinx.plugins.adapter.VisualEditorAdapter( {
 				ve: window.ve
 			} );
 			this.multiAdapter.addSingleAdapter( contentAdapter );
@@ -295,18 +295,18 @@
 
 			defer.resolve();
 
-		}.bind( this ) );
+		} );
 
 		/**
 		 * Catches VE destroy event
 		 */
-		mw.hook( 've.deactivationComplete' ).add( function () {
+		mw.hook( 've.deactivationComplete' ).add( () => {
 			$( 'body' ).removeClass( 'acrolinx-ve-sidebar' );
-			this.acrolinxPlugin.dispose( function () {
+			this.acrolinxPlugin.dispose( () => {
 				// hack to support VE re-enabling
 				this.editMode = 'textarea';
-			}.bind( this ) );
-		}.bind( this ) );
+			} );
+		} );
 
 		return defer;
 	};
@@ -318,16 +318,16 @@
 	 * later.
 	 */
 	MediawikiAcrolinx.prototype.sortAdapters = function () {
-		var self = this;
-		self.multiAdapter.adapters.sort( function ( a, b ) {
-			var inputNumA = self.getAdapterInputNum( a.adapter ),
+		const self = this;
+		self.multiAdapter.adapters.sort( ( a, b ) => {
+			const inputNumA = self.getAdapterInputNum( a.adapter ),
 				inputNumB = self.getAdapterInputNum( b.adapter );
 			return ( inputNumA - inputNumB );
 		} );
 	};
 
 	MediawikiAcrolinx.prototype.getAdapterInputNum = function ( adapter ) {
-		var inputID;
+		let inputID;
 		if ( adapter instanceof acrolinx.plugins.adapter.VisualEditorAdapter ) {
 			inputID = adapter.ve.$node[ 0 ].id;
 		} else {
@@ -340,7 +340,7 @@
 	 * Handles window resize
 	 */
 	MediawikiAcrolinx.prototype.onResize = function () {
-		var newContentAreaWidth = this.getContentAreaWidthWithAcrolinx(),
+		const newContentAreaWidth = this.getContentAreaWidthWithAcrolinx(),
 			pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
 		$( pageLocationID ).width( newContentAreaWidth );
 	};
@@ -352,7 +352,7 @@
 	 * @return {number}
 	 */
 	MediawikiAcrolinx.prototype.getContentAreaWidthWithAcrolinx = function ( acrolinxWidth ) {
-		var browserWidth = $( window ).width(),
+		const browserWidth = $( window ).width(),
 			pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' ),
 			mainTextLeft = $( pageLocationID ).offset().left;
 		acrolinxWidth = acrolinxWidth || $( '#acrolinxContainer iframe' ).width();
@@ -373,7 +373,7 @@
 	 * @param {Event} event
 	 */
 	MediawikiAcrolinx.prototype.onToggle = function ( event ) {
-		var acrolinxWidth, contentAreaWidth;
+		let acrolinxWidth, contentAreaWidth;
 
 		if ( $( event.target ).attr( 'minimized' ) === 'true' ) {
 			$( event.target ).html( '>' );
@@ -388,7 +388,7 @@
 			width: acrolinxWidth + 'px'
 		} );
 		contentAreaWidth = this.getContentAreaWidthWithAcrolinx( acrolinxWidth );
-		var pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
+		const pageLocationID = mw.config.get( 'wgAcrolinxPageLocationID' );
 		$( pageLocationID ).animate( {
 			width: contentAreaWidth
 		} );
@@ -400,7 +400,7 @@
 	 * @return {string|null}
 	 */
 	MediawikiAcrolinx.prototype.getEditMode = function () {
-		var action = mw.util.getParamValue( 'action' ),
+		const action = mw.util.getParamValue( 'action' ),
 			title = mw.config.get( 'wgTitle' );
 
 		// Page has default form and being edited
@@ -409,7 +409,7 @@
 		}
 
 		// Page is being edited through special page
-		if ( title.indexOf( 'FormEdit/' ) !== -1 ) {
+		if ( title.includes( 'FormEdit/' ) ) {
 			return 'form';
 		}
 

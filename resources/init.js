@@ -1,3 +1,3 @@
-$( function () {
-	var mediawikiAcrolinx = new window.MediawikiAcrolinx();
+$( () => {
+	const mediawikiAcrolinx = new window.MediawikiAcrolinx();
 } );
