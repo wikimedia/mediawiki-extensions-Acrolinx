@@ -44,8 +44,7 @@
 		"MakeGlobalVariablesScript": "AcrolinxHooks::setGlobalJSVariables",
 		"EditPage::showEditForm:initial": "AcrolinxHooks::addToEditPage",
 		"PageForms::AddRLModules": "AcrolinxHooks::addToFormEditPage",
-		"BeforePageDisplay": "AcrolinxHooks::onBeforePageDisplay",
-		"UnitTestsList": "AcrolinxHooks::onUnitTestsList"
+		"BeforePageDisplay": "AcrolinxHooks::onBeforePageDisplay"
 	},
 	"config": {
 		"AcrolinxServerAddress": null,
