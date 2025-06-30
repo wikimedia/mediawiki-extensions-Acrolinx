@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Config\HashConfig;
+
 /**
  * Class AcrolinxHooksTest
  *
@@ -11,18 +13,18 @@ class AcrolinxHooksTest extends MediaWikiIntegrationTestCase {
 	 * @covers AcrolinxHooks::enableAcrolinxForPage
 	 */
 	public function testEnableAcrolinxForPage() {
-		$this->setMwGlobals( [
-			'wgAcrolinxNamespaces' => [ NS_MAIN ]
+		$config = new HashConfig( [
+			'AcrolinxNamespaces' => [ NS_MAIN ],
 		] );
 		$page = $this->getExistingTestPage( 'UTest1' );
 		$this->assertTrue(
-			AcrolinxHooks::enableAcrolinxForPage( $page->getTitle() )
+			AcrolinxHooks::enableAcrolinxForPage( $config, $page->getTitle() )
 		);
-		$this->setMwGlobals( [
-			'wgAcrolinxNamespaces' => []
+		$config = new HashConfig( [
+			'AcrolinxNamespaces' => [],
 		] );
 		$this->assertFalse(
-			AcrolinxHooks::enableAcrolinxForPage( $page->getTitle() )
+			AcrolinxHooks::enableAcrolinxForPage( $config, $page->getTitle() )
 		);
 	}
 }

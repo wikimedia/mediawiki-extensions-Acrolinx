@@ -8,7 +8,9 @@
  * @ingroup Acrolinx
  */
 
+use MediaWiki\Config\Config;
 use MediaWiki\EditPage\EditPage;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Title\Title;
 
@@ -21,14 +23,13 @@ class AcrolinxHooks implements
 {
 
 	/**
+	 * @param Config $config
 	 * @param Title $title
 	 *
 	 * @return bool
 	 */
-	public static function enableAcrolinxForPage( $title ) {
-		global $wgAcrolinxNamespaces;
-
-		return in_array( $title->getNamespace(), $wgAcrolinxNamespaces );
+	public static function enableAcrolinxForPage( Config $config, $title ) {
+		return in_array( $title->getNamespace(), $config->get( 'AcrolinxNamespaces' ) );
 	}
 
 	/**
@@ -38,19 +39,17 @@ class AcrolinxHooks implements
 	 * @return void
 	 */
 	public function onMakeGlobalVariablesScript( &$vars, $out ): void {
-		global $wgAcrolinxServerAddress, $wgAcrolinxClientSignature;
-		global $wgAcrolinxPageLocationID;
-		global $wgLanguageCode;
-
-		$vars['wgAcrolinxServerAddress'] = $wgAcrolinxServerAddress;
-		$vars['wgAcrolinxClientSignature'] = $wgAcrolinxClientSignature;
-		$vars['wgAcrolinxPageLocationID'] = $wgAcrolinxPageLocationID;
-
 		$context = $out->getContext();
+		$config = $context->getConfig();
 		$mwUserLanguage = $context->getLanguage()->getCode();
+
+		$vars['wgAcrolinxServerAddress'] = $config->get( 'AcrolinxServerAddress' );
+		$vars['wgAcrolinxClientSignature'] = $config->get( 'AcrolinxClientSignature' );
+		$vars['wgAcrolinxPageLocationID'] = $config->get( 'AcrolinxPageLocationID' );
+
 		// More processing may be needed here, to convert from
 		// MediaWiki language codes to Acrolinx ones...
-		$vars['wgAcrolinxPageLanguage'] = $wgLanguageCode;
+		$vars['wgAcrolinxPageLanguage'] = $config->get( MainConfigNames::LanguageCode );
 		$vars['wgAcrolinxUserLanguage'] = $mwUserLanguage;
 	}
 
@@ -62,7 +61,7 @@ class AcrolinxHooks implements
 	 */
 	public function onEditPage__showEditForm_initial( $editPage, $output ) {
 		$title = $editPage->getTitle();
-		if ( self::enableAcrolinxForPage( $title ) ) {
+		if ( self::enableAcrolinxForPage( $output->getConfig(), $title ) ) {
 			$output->addModules( 'ext.acrolinx' );
 		}
 	}
@@ -93,7 +92,7 @@ class AcrolinxHooks implements
 			[ 'edit', 'formedit' ]
 		);
 		$isVe = $out->getRequest()->getVal('veaction') === 'edit';*/
-		$isEnabled = self::enableAcrolinxForPage( $out->getTitle() );
+		$isEnabled = self::enableAcrolinxForPage( $out->getConfig(), $out->getTitle() );
 
 		// phpcs:ignore MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment
 		if ( !$isEnabled /*|| !( $isEditOrForm || $isVe )*/ ) {
